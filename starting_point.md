@@ -10,3 +10,4 @@ Memory Split
 0x05-0x0A0 = Storage space for the 16 supported characters ( 0 to F )
 0x200-0xFFF = ROM instructions
 
+16 characters that the rom expects. Each character is 5 bytes. So a tatal of 80 bytes of fontset.

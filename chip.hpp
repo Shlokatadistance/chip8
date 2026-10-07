@@ -1,10 +1,15 @@
 #pragma once
 #include <cstdint>
+#include<random>
+
+const unsigned int VIDEO_HEIGHT = 32;
+const unsigned int VIDEO_WIDTH = 64;
 class Chip8
 {
     public:
         Chip8();
         void LoadROM(char const* filename);
+
     private:
         uint8_t registers[16]{}; // unsigned integer of length 8 bits
         uint8_t memory[4096]{};
@@ -15,6 +20,12 @@ class Chip8
         uint8_t delayTimer{};
         uint8_t soundTimer{};
         uint8_t keypad[16]{};
-        uint32_t video[64*32]{};
+        uint32_t video[VIDEO_HEIGHT*VIDEO_WIDTH]{};
         uint16_t opcode;
+
+        std::default_random_engine randGen;
+        std::uniform_int_distribution<uint8_t> randByte;
+
+        // Actual instruction
+        void OP_00E0();
 };
