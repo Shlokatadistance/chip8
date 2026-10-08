@@ -11,3 +11,16 @@ Memory Split
 0x200-0xFFF = ROM instructions
 
 16 characters that the rom expects. Each character is 5 bytes. So a tatal of 80 bytes of fontset.
+
+
+### SDL
+
+Simple Direct Media Layer
+
+
+### Compile command
+
+clang++ main.cpp chip.cpp platform.cpp glad.o -I/opt/chip8/include $(sdl2-config --cflags --libs) -o chip
+
+I had to download the OpenGL header file post generating -> unzipping the required files from glad - https://gen.glad.sh
+sdl2 on mac resides at /opt/homebrew/include/sdl2

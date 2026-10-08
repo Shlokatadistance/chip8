@@ -9,6 +9,8 @@ class Chip8
     public:
         Chip8();
         void LoadROM(char const* filename);
+        uint32_t video[VIDEO_HEIGHT*VIDEO_WIDTH]{};
+        uint8_t keypad[16]{};
 
     private:
         uint8_t registers[16]{}; // unsigned integer of length 8 bits
@@ -19,8 +21,6 @@ class Chip8
         uint8_t sp{};
         uint8_t delayTimer{};
         uint8_t soundTimer{};
-        uint8_t keypad[16]{};
-        uint32_t video[VIDEO_HEIGHT*VIDEO_WIDTH]{};
         uint16_t opcode;
 
         std::default_random_engine randGen;
