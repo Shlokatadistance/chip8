@@ -37,6 +37,7 @@ class Chip8
         void OP_NULL();
 
         // Actual instruction
+        // clear the display
         void OP_00E0();
 
         // RET
@@ -138,10 +139,7 @@ class Chip8
         // LD Vx, [I]
         void OP_Fx65();
 
-        
-        std::default_random_engine randGen;
-        std::uniform_int_distribution<uint8_t> randByte;
-        
+            
         
         //Chip8 Function table
         typedef void (Chip8::*Chip8Func)();
