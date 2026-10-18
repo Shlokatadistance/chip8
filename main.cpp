@@ -13,10 +13,10 @@ int main(int argc,char* argv[])
     std::cout << "Starting Chip8" << std::endl;
     std::cout << "Loading renderer" << std::endl;
 
-    Platform Platform("CHIP-8 Emulator",VIDEO_WIDTH*10,VIDEO_HEIGHT*10,VIDEO_HEIGHT,VIDEO_WIDTH);
+    Platform Platform("CHIP-8 Emulator",VIDEO_WIDTH*10,VIDEO_HEIGHT*10,VIDEO_WIDTH,VIDEO_HEIGHT);
 
     Chip8 chip8; // declare chip8
-    chip8.LoadROM("/opt/chip8/PONG"); // load in the rom file,passing it statically now
+    chip8.LoadROM(rom_name); // load in the rom file,passing it statically now
 
     int videoPitch = sizeof(chip8.video[0]) * VIDEO_WIDTH;
 
@@ -38,4 +38,5 @@ int main(int argc,char* argv[])
 			Platform.Update(chip8.video, videoPitch);
 		}
     }
+    return 0;
 }

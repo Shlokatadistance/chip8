@@ -1,5 +1,4 @@
 #pragma once
-#include <glad/gl.h>
 #include <cstdint>
 #include <SDL.h>
 
@@ -16,8 +15,6 @@ public:
 
 private:
     SDL_Window* window{};
-    SDL_GLContext gl_context{};
-    GLuint framebuffer_texture;
     SDL_Renderer* renderer{};
     SDL_Texture* texture{};
 };

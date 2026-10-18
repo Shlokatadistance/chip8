@@ -1,35 +1,50 @@
-#include <glad/gl.h>
-#include <cstdint>
 #include "platform.hpp"
-#include <SDL.h>
+#include <stdexcept>
+#include <string>
 
+Platform::Platform(char const* title, int window_width, int window_height, int texture_width, int texture_height)
+{
+    if (SDL_Init(SDL_INIT_VIDEO) != 0)
+    {
+        throw std::runtime_error(SDL_GetError());
+    }
 
-Platform::Platform(char const* title, int window_width, int window_height, int texture_width,int texture_height){
-    SDL_Init(SDL_INIT_VIDEO);
+    window = SDL_CreateWindow(
+        title,
+        SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+        window_width, window_height,
+        SDL_WINDOW_RESIZABLE);
 
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,SDL_GL_CONTEXT_PROFILE_CORE);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+    if (!window)
+    {
+        std::string error = SDL_GetError();
+        SDL_Quit();
+        throw std::runtime_error(error);
+    }
 
-	window = SDL_CreateWindow(
-		title,
-		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-		window_width, window_height,
-		SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    if (!renderer)
+    {
+        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+    }
+    if (!renderer)
+    {
+        std::string error = SDL_GetError();
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+        throw std::runtime_error(error);
+    }
 
-	gl_context = SDL_GL_CreateContext(window);
-	SDL_GL_SetSwapInterval(1);
-	gladLoadGL((GLADloadfunc)SDL_GL_GetProcAddress);
-
-	glGenTextures(1, &framebuffer_texture);
-	glBindTexture(GL_TEXTURE_2D, framebuffer_texture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 640, 320, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
+    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, texture_width, texture_height);
+    if (!texture)
+    {
+        std::string error = SDL_GetError();
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+        throw std::runtime_error(error);
+    }
+    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_NONE);
 }
 
 Platform::~Platform()
